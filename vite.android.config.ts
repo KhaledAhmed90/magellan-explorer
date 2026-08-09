@@ -1,22 +1,25 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
+
+const rootDir = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./src"),
+      "@": resolve(rootDir, "./src"),
     },
     dedupe: ["react", "react-dom"],
   },
-  root: ".",
+  root: rootDir,
   build: {
-    outDir: ".output/public",
+    outDir: resolve(rootDir, ".output/public"),
     emptyOutDir: true,
     rollupOptions: {
-      input: resolve(__dirname, "android-index.html"),
+      input: resolve(rootDir, "android-index.html"),
     },
   },
 });
