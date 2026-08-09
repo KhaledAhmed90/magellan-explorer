@@ -19,26 +19,18 @@ workflows:
             pwd
             node --version
             npm --version
-            echo '--- package scripts ---'
-            node -e "console.log(require('./package.json').scripts)"
-            echo '--- Vite config ---'
-            sed -n '1,240p' vite.android.config.ts
-            echo '--- Capacitor config ---'
-            sed -n '1,200p' capacitor.config.ts
-            echo '--- running build ---'
+            echo '--- running build:android ---'
             npm run build:android
-            echo '--- build command succeeded ---'
             echo '--- output files ---'
-            find .output -maxdepth 5 -type f -print 2>/dev/null | sort | head -300
+            find .output -maxdepth 6 -type f -print 2>/dev/null | sort | head -400
             test -f .output/public/index.html
-            echo '--- index.html ---'
-            sed -n '1,80p' .output/public/index.html
             echo '=== WEB BUILD PASSED ==='
           } 2>&1 | tee android-web-build.log
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
             echo '=== WEB BUILD FAILED: AUTOMATIC ERROR SUMMARY ==='
-            tail -n 120 android-web-build.log || true
+            grep -Ein 'error|err!|failed|cannot find|module not found|enoent|eacces|exception|caused by' android-web-build.log | tail -n 100 || true
+            tail -n 160 android-web-build.log || true
             echo '=== END ERROR SUMMARY ==='
           fi
           exit "$status"
@@ -64,8 +56,7 @@ workflows:
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
             echo '=== CAPACITOR FAILED: AUTOMATIC ERROR SUMMARY ==='
-            grep -Ein 'error|err!|failed|cannot find|module not found|enoent|eacces|exception|caused by' capacitor-build.log | tail -n 80 || true
-            echo '--- last 160 lines ---'
+            grep -Ein 'error|err!|failed|cannot find|module not found|enoent|eacces|exception|caused by' capacitor-build.log | tail -n 100 || true
             tail -n 160 capacitor-build.log || true
             echo '=== END CAPACITOR ERROR SUMMARY ==='
           fi
@@ -75,21 +66,40 @@ workflows:
           set -o pipefail
           rm -f gradle-build.log
           {
+            echo '=== GRADLE APK BUILD ==='
             cd android
             chmod +x gradlew
+            echo '--- Gradle version ---'
+            ./gradlew --version
+            echo '--- Building debug APK ---'
             ./gradlew assembleDebug --no-daemon --stacktrace
-            test -f app/build/outputs/apk/debug/app-debug.apk
-            ls -lah app/build/outputs/apk/debug/app-debug.apk
+            echo '--- Gradle command completed ---'
+            echo '--- Searching for every generated APK ---'
+            find . -type f -name '*.apk' -print | sort
+            echo '--- Android build outputs ---'
+            find app/build/outputs -maxdepth 6 -type f -print 2>/dev/null | sort || true
+            APK_PATH=$(find . -type f -name '*.apk' -print -quit)
+            if [ -z "$APK_PATH" ]; then
+              echo 'ERROR: Gradle completed but no APK file was generated.'
+              echo '--- Gradle outputs directory ---'
+              find . -maxdepth 8 -type d -path '*build*outputs*' -print 2>/dev/null | sort || true
+              exit 1
+            fi
+            echo "FOUND APK: $APK_PATH"
+            cp "$APK_PATH" ../magellan-debug.apk
+            ls -lah ../magellan-debug.apk
+            echo '=== APK BUILD PASSED ==='
           } 2>&1 | tee ../gradle-build.log
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
             echo '=== GRADLE FAILED: AUTOMATIC ERROR SUMMARY ==='
-            grep -Ein 'error|failed|exception|caused by|could not|unable to' ../gradle-build.log | tail -n 100 || true
-            tail -n 160 ../gradle-build.log || true
+            grep -Ein 'error|failed|exception|caused by|could not|unable to|no such file|not found' ../gradle-build.log | tail -n 120 || true
+            tail -n 200 ../gradle-build.log || true
+            echo '=== END GRADLE ERROR SUMMARY ==='
           fi
           exit "$status"
     artifacts:
-      - android/app/build/outputs/apk/debug/app-debug.apk
+      - magellan-debug.apk
       - android-web-build.log
       - capacitor-build.log
       - gradle-build.log
