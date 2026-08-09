@@ -22,10 +22,3 @@ workflows:
           ./gradlew assembleDebug --no-daemon
     artifacts:
       - android/app/build/outputs/apk/debug/app-debug.apk
-    publishing:
-      email:
-        recipients:
-          - khaled.ahmed.dev@example.com
-        notify:
-          success: true
-          failure: true
