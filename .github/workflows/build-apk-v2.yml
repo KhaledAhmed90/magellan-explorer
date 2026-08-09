@@ -1,0 +1,59 @@
+name: Build Magellan APK v2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install dependencies
+        run: npm install
+      - name: Build web application
+        run: npm run build
+      - name: Prepare Capacitor web assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          if [ -f .output/public/index.html ]; then
+            cp -R .output/public dist
+          elif [ -f dist/index.html ]; then
+            echo "dist already contains index.html"
+          else
+            echo "No static web output with index.html was produced."
+            find . -maxdepth 4 -type f -name 'index.html' | head -100
+            exit 1
+          fi
+          test -f dist/index.html
+      - name: Create Android project
+        run: npx cap add android
+      - name: Sync Capacitor Android project
+        run: npx cap sync android
+      - name: Make Gradle executable
+        run: chmod +x android/gradlew
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Magellan-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
