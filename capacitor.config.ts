@@ -3,7 +3,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.khaledahmed.magellan',
   appName: 'Magellan',
-  webDir: 'dist',
+  webDir: '.output/public',
   bundledWebRuntime: false,
 };
 
