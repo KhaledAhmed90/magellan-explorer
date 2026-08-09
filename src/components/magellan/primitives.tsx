@@ -10,9 +10,9 @@ export function Stat({
 }: {
   label: string;
   value: ReactNode;
-  unit?: string;
-  hint?: string;
-  className?: string;
+  unit?: string | undefined;
+  hint?: string | undefined;
+  className?: string | undefined;
 }) {
   const unavailable = value === null || value === undefined || value === "";
   return (
