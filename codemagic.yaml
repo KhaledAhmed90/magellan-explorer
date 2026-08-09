@@ -11,10 +11,40 @@ workflows:
         script: npm install
       - name: Build web application
         script: npm run build
+      - name: Prepare Capacitor web assets
+        script: |
+          set -e
+          echo "Inspecting web build output..."
+          find .output -maxdepth 4 -type f \( -name '*.html' -o -name '*.js' \) -print 2>/dev/null | head -100 || true
+          if [ -f ".output/public/index.html" ]; then
+            echo "Found .output/public/index.html"
+          elif [ -f ".output/public/_shell.html" ]; then
+            echo "Using TanStack Start SPA shell"
+            cp .output/public/_shell.html .output/public/index.html
+          elif [ -f "dist/index.html" ]; then
+            echo "Using dist/index.html"
+            mkdir -p .output/public
+            cp dist/index.html .output/public/index.html
+          else
+            echo "Searching for another generated HTML shell..."
+            HTML_FILE=$(find .output -type f -name '*.html' -print -quit 2>/dev/null || true)
+            if [ -n "$HTML_FILE" ]; then
+              echo "Using generated shell: $HTML_FILE"
+              mkdir -p .output/public
+              cp "$HTML_FILE" .output/public/index.html
+            else
+              echo "ERROR: No generated HTML file was found after npm run build."
+              exit 1
+            fi
+          fi
+          test -f .output/public/index.html
+          echo "Capacitor web directory ready: .output/public/index.html"
       - name: Generate Android project
         script: |
+          set -e
           rm -rf android
-          npx cap add android
+          npx cap add android || test -d android
+          test -d android
           npx cap sync android
       - name: Build debug APK
         script: |
