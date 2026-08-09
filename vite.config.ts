@@ -9,7 +9,18 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 export default defineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
     server: { entry: "server" },
+
+    // Capacitor needs a static client shell rather than a server-only Start output.
+    // SPA mode keeps the existing TanStack Router application and prerenders the
+    // root shell as a normal index.html that can be loaded by the Android WebView.
+    spa: {
+      enabled: true,
+      prerender: {
+        outputPath: "/index.html",
+        crawlLinks: false,
+        retryCount: 0,
+      },
+    },
   },
 });
