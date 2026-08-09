@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NavigateRouteImport } from './routes/navigate'
+import { Route as ReceiveRouteImport } from './routes/receive'
+import { Route as SatellitesRouteImport } from './routes/satellites'
+import { Route as ShareRouteImport } from './routes/share'
+import { Route as SignalRouteImport } from './routes/signal'
+import { Route as SkyRouteImport } from './routes/sky'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NavigateRoute = NavigateRouteImport.update({
+  id: '/navigate',
+  path: '/navigate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReceiveRoute = ReceiveRouteImport.update({
+  id: '/receive',
+  path: '/receive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SatellitesRoute = SatellitesRouteImport.update({
+  id: '/satellites',
+  path: '/satellites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareRoute = ShareRouteImport.update({
+  id: '/share',
+  path: '/share',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignalRoute = SignalRouteImport.update({
+  id: '/signal',
+  path: '/signal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkyRoute = SkyRouteImport.update({
+  id: '/sky',
+  path: '/sky',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/navigate': typeof NavigateRoute
+  '/receive': typeof ReceiveRoute
+  '/satellites': typeof SatellitesRoute
+  '/share': typeof ShareRoute
+  '/signal': typeof SignalRoute
+  '/sky': typeof SkyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/navigate': typeof NavigateRoute
+  '/receive': typeof ReceiveRoute
+  '/satellites': typeof SatellitesRoute
+  '/share': typeof ShareRoute
+  '/signal': typeof SignalRoute
+  '/sky': typeof SkyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/navigate': typeof NavigateRoute
+  '/receive': typeof ReceiveRoute
+  '/satellites': typeof SatellitesRoute
+  '/share': typeof ShareRoute
+  '/signal': typeof SignalRoute
+  '/sky': typeof SkyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/navigate'
+    | '/receive'
+    | '/satellites'
+    | '/share'
+    | '/signal'
+    | '/sky'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/navigate'
+    | '/receive'
+    | '/satellites'
+    | '/share'
+    | '/signal'
+    | '/sky'
+  id:
+    | '__root__'
+    | '/'
+    | '/navigate'
+    | '/receive'
+    | '/satellites'
+    | '/share'
+    | '/signal'
+    | '/sky'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NavigateRoute: typeof NavigateRoute
+  ReceiveRoute: typeof ReceiveRoute
+  SatellitesRoute: typeof SatellitesRoute
+  ShareRoute: typeof ShareRoute
+  SignalRoute: typeof SignalRoute
+  SkyRoute: typeof SkyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +130,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/navigate': {
+      id: '/navigate'
+      path: '/navigate'
+      fullPath: '/navigate'
+      preLoaderRoute: typeof NavigateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/receive': {
+      id: '/receive'
+      path: '/receive'
+      fullPath: '/receive'
+      preLoaderRoute: typeof ReceiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/satellites': {
+      id: '/satellites'
+      path: '/satellites'
+      fullPath: '/satellites'
+      preLoaderRoute: typeof SatellitesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share': {
+      id: '/share'
+      path: '/share'
+      fullPath: '/share'
+      preLoaderRoute: typeof ShareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signal': {
+      id: '/signal'
+      path: '/signal'
+      fullPath: '/signal'
+      preLoaderRoute: typeof SignalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sky': {
+      id: '/sky'
+      path: '/sky'
+      fullPath: '/sky'
+      preLoaderRoute: typeof SkyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NavigateRoute: NavigateRoute,
+  ReceiveRoute: ReceiveRoute,
+  SatellitesRoute: SatellitesRoute,
+  ShareRoute: ShareRoute,
+  SignalRoute: SignalRoute,
+  SkyRoute: SkyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
