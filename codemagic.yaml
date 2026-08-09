@@ -9,6 +9,23 @@ workflows:
     scripts:
       - name: Install dependencies
         script: npm install
+      - name: Configure TanStack Start for static Android build
+        script: |
+          set -euxo pipefail
+          echo '=== PATCHING VITE CONFIG FOR CAPACITOR ==='
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('vite.config.ts')
+          s = p.read_text()
+          old = '    // Redirect TanStack Start\'s bundled server entry to src/server.ts (our SSR error wrapper).\n    server: { entry: "server" },\n\n'
+          if old in s:
+              s = s.replace(old, '')
+              p.write_text(s)
+              print('Removed custom TanStack Start server entry for Android build.')
+          else:
+              print('Custom server entry already absent; leaving config unchanged.')
+          PY
+          cat vite.config.ts
       - name: Build web application
         script: npm run build
       - name: Prepare Capacitor web assets
@@ -21,7 +38,7 @@ workflows:
           echo '--- capacitor config ---'
           cat capacitor.config.ts || true
           echo '--- output tree ---'
-          find .output -maxdepth 5 -type f -print 2>/dev/null | sort | head -300 || true
+          find .output -maxdepth 6 -type f -print 2>/dev/null | sort | head -400 || true
           echo '--- HTML files ---'
           find . -type f -name '*.html' -not -path './node_modules/*' -print 2>/dev/null | sort | head -100 || true
           if [ -f '.output/public/index.html' ]; then
@@ -58,16 +75,10 @@ workflows:
           cat capacitor.config.ts
           echo '--- installed Capacitor packages ---'
           npm ls @capacitor/cli @capacitor/core @capacitor/android --depth=0 || true
-          echo '--- pre-existing android directory ---'
-          test -d android && find android -maxdepth 2 -type f -print | head -100 || echo 'android directory absent'
           rm -rf android
           echo '--- running cap add android ---'
           npx cap add android
-          echo '--- cap add exit code: success ---'
           test -d android
-          test -f android/settings.gradle || test -f android/settings.gradle.kts || true
-          echo '--- android directory created ---'
-          find android -maxdepth 3 -type f -print | sort | head -200
           echo '--- running cap sync android ---'
           npx cap sync android --verbose
           echo '=== CAPACITOR DIAGNOSTICS COMPLETE ==='
