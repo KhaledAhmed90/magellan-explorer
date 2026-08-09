@@ -10,33 +10,193 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as NavigateRouteImport } from './routes/navigate'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReceiveRouteImport } from './routes/receive'
+import { Route as SatellitesRouteImport } from './routes/satellites'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ShareRouteImport } from './routes/share'
+import { Route as SignalRouteImport } from './routes/signal'
+import { Route as SkyRouteImport } from './routes/sky'
+import { Route as TransportsRouteImport } from './routes/transports'
+import { Route as WaypointsRouteImport } from './routes/waypoints'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NavigateRoute = NavigateRouteImport.update({
+  id: '/navigate',
+  path: '/navigate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReceiveRoute = ReceiveRouteImport.update({
+  id: '/receive',
+  path: '/receive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SatellitesRoute = SatellitesRouteImport.update({
+  id: '/satellites',
+  path: '/satellites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareRoute = ShareRouteImport.update({
+  id: '/share',
+  path: '/share',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignalRoute = SignalRouteImport.update({
+  id: '/signal',
+  path: '/signal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkyRoute = SkyRouteImport.update({
+  id: '/sky',
+  path: '/sky',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TransportsRoute = TransportsRouteImport.update({
+  id: '/transports',
+  path: '/transports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WaypointsRoute = WaypointsRouteImport.update({
+  id: '/waypoints',
+  path: '/waypoints',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/history': typeof HistoryRoute
+  '/navigate': typeof NavigateRoute
+  '/privacy': typeof PrivacyRoute
+  '/receive': typeof ReceiveRoute
+  '/satellites': typeof SatellitesRoute
+  '/settings': typeof SettingsRoute
+  '/share': typeof ShareRoute
+  '/signal': typeof SignalRoute
+  '/sky': typeof SkyRoute
+  '/transports': typeof TransportsRoute
+  '/waypoints': typeof WaypointsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/history': typeof HistoryRoute
+  '/navigate': typeof NavigateRoute
+  '/privacy': typeof PrivacyRoute
+  '/receive': typeof ReceiveRoute
+  '/satellites': typeof SatellitesRoute
+  '/settings': typeof SettingsRoute
+  '/share': typeof ShareRoute
+  '/signal': typeof SignalRoute
+  '/sky': typeof SkyRoute
+  '/transports': typeof TransportsRoute
+  '/waypoints': typeof WaypointsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/history': typeof HistoryRoute
+  '/navigate': typeof NavigateRoute
+  '/privacy': typeof PrivacyRoute
+  '/receive': typeof ReceiveRoute
+  '/satellites': typeof SatellitesRoute
+  '/settings': typeof SettingsRoute
+  '/share': typeof ShareRoute
+  '/signal': typeof SignalRoute
+  '/sky': typeof SkyRoute
+  '/transports': typeof TransportsRoute
+  '/waypoints': typeof WaypointsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/history'
+    | '/navigate'
+    | '/privacy'
+    | '/receive'
+    | '/satellites'
+    | '/settings'
+    | '/share'
+    | '/signal'
+    | '/sky'
+    | '/transports'
+    | '/waypoints'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/history'
+    | '/navigate'
+    | '/privacy'
+    | '/receive'
+    | '/satellites'
+    | '/settings'
+    | '/share'
+    | '/signal'
+    | '/sky'
+    | '/transports'
+    | '/waypoints'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/history'
+    | '/navigate'
+    | '/privacy'
+    | '/receive'
+    | '/satellites'
+    | '/settings'
+    | '/share'
+    | '/signal'
+    | '/sky'
+    | '/transports'
+    | '/waypoints'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  HistoryRoute: typeof HistoryRoute
+  NavigateRoute: typeof NavigateRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ReceiveRoute: typeof ReceiveRoute
+  SatellitesRoute: typeof SatellitesRoute
+  SettingsRoute: typeof SettingsRoute
+  ShareRoute: typeof ShareRoute
+  SignalRoute: typeof SignalRoute
+  SkyRoute: typeof SkyRoute
+  TransportsRoute: typeof TransportsRoute
+  WaypointsRoute: typeof WaypointsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +208,108 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/navigate': {
+      id: '/navigate'
+      path: '/navigate'
+      fullPath: '/navigate'
+      preLoaderRoute: typeof NavigateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/receive': {
+      id: '/receive'
+      path: '/receive'
+      fullPath: '/receive'
+      preLoaderRoute: typeof ReceiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/satellites': {
+      id: '/satellites'
+      path: '/satellites'
+      fullPath: '/satellites'
+      preLoaderRoute: typeof SatellitesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share': {
+      id: '/share'
+      path: '/share'
+      fullPath: '/share'
+      preLoaderRoute: typeof ShareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signal': {
+      id: '/signal'
+      path: '/signal'
+      fullPath: '/signal'
+      preLoaderRoute: typeof SignalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sky': {
+      id: '/sky'
+      path: '/sky'
+      fullPath: '/sky'
+      preLoaderRoute: typeof SkyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/transports': {
+      id: '/transports'
+      path: '/transports'
+      fullPath: '/transports'
+      preLoaderRoute: typeof TransportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/waypoints': {
+      id: '/waypoints'
+      path: '/waypoints'
+      fullPath: '/waypoints'
+      preLoaderRoute: typeof WaypointsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  HistoryRoute: HistoryRoute,
+  NavigateRoute: NavigateRoute,
+  PrivacyRoute: PrivacyRoute,
+  ReceiveRoute: ReceiveRoute,
+  SatellitesRoute: SatellitesRoute,
+  SettingsRoute: SettingsRoute,
+  ShareRoute: ShareRoute,
+  SignalRoute: SignalRoute,
+  SkyRoute: SkyRoute,
+  TransportsRoute: TransportsRoute,
+  WaypointsRoute: WaypointsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
