@@ -16,6 +16,7 @@ import { Route as SatellitesRouteImport } from './routes/satellites'
 import { Route as ShareRouteImport } from './routes/share'
 import { Route as SignalRouteImport } from './routes/signal'
 import { Route as SkyRouteImport } from './routes/sky'
+import { Route as WaypointsRouteImport } from './routes/waypoints'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,6 +53,11 @@ const SkyRoute = SkyRouteImport.update({
   path: '/sky',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WaypointsRoute = WaypointsRouteImport.update({
+  id: '/waypoints',
+  path: '/waypoints',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/share': typeof ShareRoute
   '/signal': typeof SignalRoute
   '/sky': typeof SkyRoute
+  '/waypoints': typeof WaypointsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/share': typeof ShareRoute
   '/signal': typeof SignalRoute
   '/sky': typeof SkyRoute
+  '/waypoints': typeof WaypointsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/share': typeof ShareRoute
   '/signal': typeof SignalRoute
   '/sky': typeof SkyRoute
+  '/waypoints': typeof WaypointsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/share'
     | '/signal'
     | '/sky'
+    | '/waypoints'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/share'
     | '/signal'
     | '/sky'
+    | '/waypoints'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/share'
     | '/signal'
     | '/sky'
+    | '/waypoints'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   ShareRoute: typeof ShareRoute
   SignalRoute: typeof SignalRoute
   SkyRoute: typeof SkyRoute
+  WaypointsRoute: typeof WaypointsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/waypoints': {
+      id: '/waypoints'
+      path: '/waypoints'
+      fullPath: '/waypoints'
+      preLoaderRoute: typeof WaypointsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,17 +203,8 @@ const rootRouteChildren: RootRouteChildren = {
   ShareRoute: ShareRoute,
   SignalRoute: SignalRoute,
   SkyRoute: SkyRoute,
+  WaypointsRoute: WaypointsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

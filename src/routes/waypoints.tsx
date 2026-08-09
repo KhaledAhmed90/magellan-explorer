@@ -34,14 +34,22 @@ function WaypointsPage() {
   const [form, setForm] = useState(empty);
   const [editing, setEditing] = useState<string | null>(null);
 
-  function submit(e: React.FormEvent) {
+  function submit(e: React.FormEvent): void {
     e.preventDefault();
     const lat = Number(form.lat);
     const lon = Number(form.lon);
-    if (!form.name.trim()) return toast.error("Name is required");
-    if (!Number.isFinite(lat) || lat < -90 || lat > 90) return toast.error("Latitude must be −90…90");
-    if (!Number.isFinite(lon) || lon < -180 || lon > 180)
-      return toast.error("Longitude must be −180…180");
+    if (!form.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+    if (!Number.isFinite(lat) || lat < -90 || lat > 90) {
+      toast.error("Latitude must be −90…90");
+      return;
+    }
+    if (!Number.isFinite(lon) || lon < -180 || lon > 180) {
+      toast.error("Longitude must be −180…180");
+      return;
+    }
     if (editing) {
       updateWaypoint(editing, { name: form.name.trim(), latitude: lat, longitude: lon, note: form.note });
       toast.success("Waypoint updated");
