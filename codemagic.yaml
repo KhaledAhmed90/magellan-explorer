@@ -34,6 +34,20 @@ workflows:
             rm -rf android
             npx cap add android
             npx cap sync android --verbose
+            echo '--- verify Capacitor Gradle integration ---'
+            if [ ! -f android/capacitor.settings.gradle ]; then
+              echo 'capacitor.settings.gradle was not generated; creating the required Capacitor 7 settings file.'
+              cat > android/capacitor.settings.gradle <<'EOF'
+// Generated fallback for CI when Capacitor CLI does not persist this file.
+include ':capacitor-android'
+project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/android/capacitor')
+EOF
+            fi
+            test -f android/capacitor.settings.gradle
+            echo '--- capacitor.settings.gradle ---'
+            cat android/capacitor.settings.gradle
+            echo '--- settings.gradle ---'
+            sed -n '1,180p' android/settings.gradle 2>/dev/null || sed -n '1,180p' android/settings.gradle.kts
             test -f android/app/build.gradle || test -f android/app/build.gradle.kts
             echo '=== CAPACITOR PASSED ==='
           } 2>&1 | tee capacitor-build.log
@@ -50,10 +64,10 @@ workflows:
             echo '=== GRADLE APK BUILD ==='
             cd android
             chmod +x gradlew
+            echo '--- Capacitor settings file ---'
+            test -f capacitor.settings.gradle && cat capacitor.settings.gradle
             echo '--- Gradle tasks relevant to APK ---'
             ./gradlew :app:tasks --all | grep -E 'assemble.*Debug|package.*Debug|bundle.*Debug' || true
-            echo '--- app build configuration ---'
-            sed -n '1,260p' app/build.gradle 2>/dev/null || sed -n '1,260p' app/build.gradle.kts
             echo '--- clean build ---'
             ./gradlew clean --no-daemon --stacktrace
             echo '--- explicit app debug package ---'
