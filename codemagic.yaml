@@ -16,6 +16,10 @@ workflows:
           {
             echo '=== MAGELLAN ANDROID WEB BUILD ==='
             npm run build:android
+            echo '--- normalize Capacitor entry point ---'
+            if [ -f .output/public/android-index.html ] && [ ! -f .output/public/index.html ]; then
+              cp .output/public/android-index.html .output/public/index.html
+            fi
             test -f .output/public/index.html
             find .output/public -maxdepth 3 -type f -print | sort
             echo '=== WEB BUILD PASSED ==='
@@ -33,13 +37,18 @@ workflows:
             echo '=== CAPACITOR BUILD ==='
             rm -rf android
             npx cap add android
-            npx cap sync android --verbose
+            if [ ! -f .output/public/index.html ]; then
+              echo 'ERROR: Capacitor web directory is missing index.html.'
+              exit 1
+            fi
+            npx cap sync android
             echo '--- verify Capacitor Gradle integration ---'
             if [ ! -f android/capacitor.settings.gradle ]; then
-              echo 'capacitor.settings.gradle was not generated; creating the required Capacitor 7 settings file.'
+              echo 'capacitor.settings.gradle was not generated; creating the required settings file.'
               printf '%s\n' "// Generated fallback for CI when Capacitor CLI does not persist this file." "include ':capacitor-android'" "project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/android/capacitor')" > android/capacitor.settings.gradle
             fi
             test -f android/capacitor.settings.gradle
+            test -f android/app/src/main/assets/capacitor.plugins.json
             echo '--- capacitor.settings.gradle ---'
             cat android/capacitor.settings.gradle
             echo '--- settings.gradle ---'
