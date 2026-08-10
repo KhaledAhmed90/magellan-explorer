@@ -19,7 +19,12 @@ export default defineConfig({
     outDir: resolve(rootDir, ".output/public"),
     emptyOutDir: true,
     rollupOptions: {
+      // Capacitor requires the web entry point to be named index.html.
+      // Keep the source file named android-index.html, but emit index.html.
       input: resolve(rootDir, "android-index.html"),
+      output: {
+        entryFileNames: "assets/[name]-[hash].js",
+      },
     },
   },
 });
